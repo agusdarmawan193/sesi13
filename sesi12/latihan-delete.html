@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>latihan-edit.html</title>
+</head>
+<body>
+    <h3>hapus Data User</h3>
+    <form action="">
+        <div>
+            nama lengkap
+            <input type="text" id="txNAMA">
+        </div>
+        <div>
+            email
+            <input type="text" id="txEMAIL">
+        </div>
+        <div>
+            user name
+            <input type="text" id="txUSER">
+        </div>
+        <div>
+            password
+            <input type="text" id="txPASS1">
+        </div>
+        <div>
+            verifikasi password
+            <input type="text" id="txPASS2">
+        </div>
+        <div>
+            <button type="button" onclick="destroydata()">hapus data</button>
+        </div>
+    </form>
+
+        <script>
+            const storedata = new XMLHttpRequest();
+            caridata();
+
+            function caridata(){
+                const qs = window.location.search;
+                const usp = new URLSearchParams(qs);
+                let iduser = usp.get("id");
+                const target = "https://webpro.ptov.my.id/api/curduser.php?aksi=get&q="+iduser;
+                storedata.open("GET",target,true)
+                storedata.onload =function(){
+                    const gdta = JSON.parse(this.responseText);
+                    console.log(gdta)
+                    document.getElementById("txNAMA").value = gdta.isi[0][0]
+                    document.getElementById("txEMAIL").value = gdta.isi[0][1]
+                    document.getElementById("txUSER").value = gdta.isi[0][2]
+                    document.getElementById("txPASS1").value = gdta.isi[0][3]
+                    document.getElementById("txPASS2").value = gdta.isi[0][3]
+                }
+                storedata.send();
+            }
+            function destroydata(){
+                const qs = window.location.search;
+                const usp = new URLSearchParams(qs);
+                let iduser = usp.get("id");
+                const target = "https://webpro.ptov.my.id/api/curduser.php?aksi=destroy";
+                let parameter= "iduser="+iduser;
+
+                storedata.open("POST",target,true);
+                storedata.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                storedata.send(parameter);
+
+                storedata.onload = function(){
+                    //console.log(this.responseText)//
+                    const gdta = JSON.parse(this.responseText);
+                    if(gdta.error == 0){
+                        alert('berhasil')
+                        setTimeout("window.location.href='latihan1.html'",1000)
+                    }
+                }
+            }
+    
+        </script>
+    
+            
+
+
+</body>
+
+</html>
